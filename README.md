@@ -10,7 +10,6 @@ It was prepared to run on Linux but it should be fairly easy to follow and adapt
 * [Starting Docker containers](#starting-docker-containers)
 * [Development phase](#development-phase)
 * [Working with pgAdmin](#working-with-pgadmin)
-* [Setting up PHP Interpreter and Debugger](#setting-up-php-interpreter-and-debugger)
 * [Laravel code structure](#laravel-code-structure)
 * [Publishing the image](#publishing-your-image)
 
@@ -68,7 +67,7 @@ Then, copy the contents of the demo repository to your own.
     git push origin master 
  
 At this point you should have the project skeleton in your local machine and be ready to start working on it.
-You may remove the `lbaw-develop` demo directory, as it is noy needed anymore.
+You may remove the __lbaw-develop__ demo directory, as it is noy needed anymore.
 
 
 ## Starting Docker containers
@@ -95,7 +94,7 @@ __Docker Compose__ is a tool that helps managing multiple containers at once: st
 ```
 
 For development purposes, we have 4 configured containers. 
-Which are specified under services at `docker-compose.yml`: 
+Which are specified under services at __docker-compose.yml__: 
 1. __php__ --- were your source code lives.
 2. __postgres__ --- to host the development (local) database.
 3. __pgadmin__ --- to help interacting with the database.
@@ -111,6 +110,7 @@ docker-compose up
 ```
 
 This will "automagically" do everything for you. 
+
 But it is important that you know a thing or two about what's going on under the hood: 
 1. Docker-compose will read the __docker-compose.yml__ file to know what containers it needs to start up.
 2. For each container, it will see what _image_ this container is based on, and fetch it (from Docker Hub). 
@@ -131,7 +131,7 @@ The next time you run `docker-compose up`, docker instantiates brand new contain
 But you'll probably just want to reseed the database [Development phase](#development-phase). 
 Either way, your code will always be kept because it lives in the host (your computer) and is shared with the container.
 
-__When you [publish your image](#publishing-your-image),__ the project source code will be copied to a brand new _php container_, slightly differently configured, and uploaded to Docker Hub (check the `upload_image.sh` file). 
+__When you [publish your image](#publishing-your-image),__ the project source code will be copied to a brand new _php container_, slightly differently configured, and uploaded to Docker Hub (check the __upload_image.sh__ file). 
 Latter on, the image will be pulled by an automated process to the production machine and, due to the different setup configurations, it will connect to your production database at the "dbm.fe.up.pt", using the credentials previously given to each group.
 
 
@@ -182,7 +182,7 @@ You can check the official instructions [here](https://blog.jetbrains.com/phpsto
 5. Choose __Docker__ and select __lbawlaravel_php:latest__ as the __Image Name__
 6. Hit OK, and it automatically should detect PHP 7.1.15 and Xdebug 2.6.0
 
-**NOTA: Passámos do Laravel 5.5 para 5.8, certo @Tiago?**
+**NOTA: Passámos do Laravel 5.5 para 5.8, confirmas @Tiago?**
 
 ## Laravel code structure
 
@@ -200,7 +200,7 @@ This route receives a parameter *id* that is passed on to the *show* method of a
 ### 2) Controllers
 
 [Controllers](https://laravel.com/docs/5.8/controllers) group related request handling logic into a single class. 
-Controllers are normally defined in the *app/Http/Controllers* folder.
+Controllers are normally defined in the __app/Http/Controllers__ folder.
 
     class CardController extends Controller
     {
@@ -219,12 +219,12 @@ The method searches for a card in the database, checks if the user as permission
 
 ### 3) Database and Models
 
-To access the database, we will use the query builder capabilities of [Eloquent](https://laravel.com/docs/5.8/eloquent) but the initial database seeding will still be done using raw SQL (the script that creates the tables can be found in *resources/sql/seed.sql*).
+To access the database, we will use the query builder capabilities of [Eloquent](https://laravel.com/docs/5.8/eloquent) but the initial database seeding will still be done using raw SQL (the script that creates the tables can be found in __resources/sql/seed.sql__).
 
     $card = Card::find($id);
 
 This line tells *Eloquent* to fetch a card from the database with a certain *id* (the primary key of the table). 
-The result will be an object of the class *Card* defined in *app/Card.php*. 
+The result will be an object of the class *Card* defined in __app/Card.php__. 
 This class extends the *Model* class and contains information about the relation between the *card* tables and other tables:
 
     /* A card belongs to one user */
@@ -240,8 +240,8 @@ This class extends the *Model* class and contains information about the relation
 ### 4) Policies
 
 [Policies](https://laravel.com/docs/5.8/authorization#writing-policies) define which actions a user can take. 
-You can find policies inside the *app/Policies* folder. 
-For example, in the *CardPolicy.php* file, we defined a *show* method that only allows a certain user to view a card if that user is the card owner:
+You can find policies inside the __app/Policies__ folder. 
+For example, in the __CardPolicy.php__ file, we defined a *show* method that only allows a certain user to view a card if that user is the card owner:
 
     public function show(User $user, Card $card)
     {
@@ -262,31 +262,31 @@ A *controller* only needs to return HTML code for it to be sent to the *browser*
 
     return view('pages.card', ['card' => $card]);
 
-In this example, *pages.card* references a blade template that can be found at *resources/views/pages/card.blade.php*. 
+In this example, *pages.card* references a blade template that can be found at __resources/views/pages/card.blade.php__. 
 The second parameter contains the data we are injecting into the template.
 
 The first line of the template states that it extends another template:
 
     @extends('layouts.app')
 
-This second template can be found at *resources/views/layouts/app.blade.php* and is the basis of all pages in our application. Inside this template, the place where the page template is introduced is identified by the following command:
+This second template can be found at __resources/views/layouts/app.blade.php__ and is the basis of all pages in our application. Inside this template, the place where the page template is introduced is identified by the following command:
 
     @yield('content')
 
-Besides the *pages* and *layouts* template folders, we also have a *partials* folder where small snippets of HTML code can be saved to be reused in other pages.    
+Besides the __pages__ and __layouts__ template folders, we also have a __partials__ folder where small snippets of HTML code can be saved to be reused in other pages.    
 
 ### 6) CSS
 
-The easiest way to use CSS is just to edit the CSS file found at *public/css/app.css*.
+The easiest way to use CSS is just to edit the CSS file found at __public/css/app.css__.
 
 If you prefer to use [less](http://lesscss.org/), a PHP version of the less command-line tool as been added to the project. 
-In this case, edit the file at *resources/assets/less/app.less* instead and keep the following command running in a shell window so that any changes to this file can be compiled into the public CSS file:
+In this case, edit the file at __resources/assets/less/app.less__ instead and keep the following command running in a shell window so that any changes to this file can be compiled into the public CSS file:
 
     ./compile-assets.sh
 
 ### 7) JavaScript
 
-To add JavaScript into your project, just edit the file found at *public/js/app.js*.
+To add JavaScript into your project, just edit the file found at __public/js/app.js__.
 
 ## Publishing your image
 
@@ -302,7 +302,7 @@ Once you have a username, let your docker know who you are by executing:
 
     docker login
 
-Once your docker is able to communicate with the docker hub using your credentials, configure the `upload_image.sh` script with your username and the image name. 
+Once your docker is able to communicate with the docker hub using your credentials, configure the __upload_image.sh__ script with your username and the image name. 
 Example configuration:
 
     DOCKER_USERNAME=johndoe # Replace by your docker hub username
@@ -319,11 +319,11 @@ You can test the image locally by running:
 The above command exposes your application on http://localhost:8000. 
 The `-e` argument creates environment variables inside the container, used to provide Laravel with the required database configurations. 
 
-Note that during the build process we adopt the production configurations configured in the `.env_production` file. 
+Note that during the build process we adopt the production configurations configured in the __.env_production__ file. 
 **You should not add your database username and password to this file. 
 The configuration will be provided as an environment variable to your container on execution time**. 
 This prevents anyone else but us from running your container with your database. 
 
 Finally, note that here should be only one image per group. 
 One team member should create the image initially and add his team to the **public** repository at docker hub. 
-You should provide your teacher the details for accessing your docker image, namely, the docker username and repository (DOCKER_USERNAME/lbaw18GG), in case it was changed.
+You should provide your teacher the details for accessing your docker image, namely, the docker username and repository (*DOCKER_USERNAME/lbaw18GG*), in case it was changed.
