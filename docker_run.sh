@@ -2,5 +2,5 @@
 set -e
 
 env >> /var/www/.env
-php-fpm7.1 -D
+php-fpm -D
 nginx -g "daemon off;"
