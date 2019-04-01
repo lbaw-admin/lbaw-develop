@@ -1,4 +1,4 @@
-FROM ubuntu:17.10
+FROM ubuntu:18.04
 
 # Install dependencies
 RUN apt-get update
