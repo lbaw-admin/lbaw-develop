@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This README describes how to setup the "alternative" development environment for LBAW (the official is [here](https://github.com/lbaw-admin/lbaw-laravel)).
+This README describes how to setup the development environment for LBAW 2018/19
 It was prepared to run on Linux but it should be fairly easy to follow and adapt for other operating systems.
 
 * [Installing Docker and Docker Compose](#installing-docker-and-docker-compose)
@@ -37,36 +37,38 @@ The official instructions are in [Install Docker](https://docs.docker.com/instal
     
 ## Setting up the Development repository    
 
-You should have your own repository and a copy of the demo repository in the same folder in your machine.  
-Then, copy the contents of the demo repository to your own:
+You should have your own repository and a copy of the demo repository in the same folder in your machine.
+Then, copy the contents of the demo repository to your own.
 
-    # clone the group repository, if not yet available locally
-    git clone git@github.com:<YOUR GITHUB>/lbaw17GG 
+    # clone the group repository (lbaw18GG), if not yet available locally
+    # Notice that you need to substitute GG by your group's number
+    git clone https://git.fe.up.pt/lbaw/lbaw18/lbaw18GG.git
     
-    # clone the branch of the demo copy
-    git clone -b phpdev-on-docker git@github.com:lbaw-admin/phpdev-on-docker.git
+    # clone the LBAW's project skeleton
+    # NOW from github
+    git clone git@github.com:lbaw-admin/lbaw-develop.git
+    # LATER from git, not github!
+    #git clone https://git.fe.up.pt/lbaw/lbaw-develop.git
     
     # remove the Git folder from the demo folder
-    rm -rf phpdev-on-docker/.git
+    rm -rf lbaw-develop/.git
     
     # goto your repository
-    cd lbaw17GG
+    cd lbaw18GG
     
     # make sure you are using the master branch
     git checkout master 
     
     # copy all the demo files
-    cp -r ../phpdev-on-docker/. .
+    cp -r ../lbaw-develop/. .
     
     # add the new files to your repository
     git add .  
     git commit -m "Base laravel structure"
     git push origin master 
-
-**Tip**: If you're having trouble cloning from GitHub using *ssh*, check [this](https://help.github.com/articles/connecting-to-github-with-ssh/).
-
-Notice that you need to substitute \<YOUR GITHUB\> with the username of the team member that owns the repository. 
-At this point you should have the project skeleton in your local machine and be ready to start.
+ 
+At this point you should have the project skeleton in your local machine and be ready to start working on it.
+You may remove the `lbaw-develop` demo directory, as it is noy needed anymore.
 
 
 ## Starting Docker containers
@@ -84,22 +86,23 @@ __Docker Compose__ is a tool that helps managing multiple containers at once: st
 +-------+ +-------+ +-------+ +-------+
 |       | |       | |       | |       |
 |  PHP  | |POSTGRE| |PG     | |MAILHOG|
-|       | |SQL    | |ADMIN4 | |       |
-|       | |       | |       | |       |
+|  +    | |SQL    | |ADMIN4 | |       |
+|  NGINX| |       | |       | |       |
 +-------+ +-------+ +-------+ +-------+
 +-------------------------------------+
 |               Docker                |
 +-------------------------------------+
 ```
 
-For development purposes we have 4 configured containers. Which are specified under services at `docker-compose.yml`: 
+For development purposes, we have 4 configured containers. 
+Which are specified under services at `docker-compose.yml`: 
 1. __php__ --- were your source code lives.
 2. __postgres__ --- to host the development (local) database.
 3. __pgadmin__ --- to help interacting with the database.
-4. __mailhog__ --- offers a "fake" e-mail server and client.
+4. __mailhog__ --- (optional) offers a "fake" e-mail server and client.
 
 We setup the _php container_ so that the project folder is shared with the container i.e. it both lives in your PC(s) and in the container. 
-So when you change your code it also changes inside the container. 
+So when you change your code it also changes the code inside the container. 
 Ports are also opened and forwarded so that, for instance, when you go to http://localhost:8000 on your browser, the requests are redirected to the _php container_ (that is where the PHP server lives).
 
 __To start the servers__ you simply run 
@@ -109,7 +112,7 @@ docker-compose up
 
 This will "automagically" do everything for you. 
 But it is important that you know a thing or two about what's going on under the hood: 
-1. Docker-compose will read the __docker-compose.yml__ file and know what containers it needs to start up.
+1. Docker-compose will read the __docker-compose.yml__ file to know what containers it needs to start up.
 2. For each container, it will see what _image_ this container is based on, and fetch it (from Docker Hub). 
 In the case of an image not being provided, e.g. the _php container_, a Dockerfile is used. 
 This file is like a shell script with commnands to create the corresponding image. 
@@ -121,15 +124,15 @@ And finally, it launches the PHP server (`php artisan serve`).
 
 __Everything should now be up and running.__ Checkout your web server at `http://localhost:8000`, the phpAdmin at `http://localhost:5050` and mailhog at `http://localhost:8025`. To stop the servers just hit __Ctrt^C__.
 
-__To restart the containers__, you just issue `docker-compose up` again. 
-This docker-compose up followed by Ctrl^C is similar to turn on and off your computer, meaning that everything will be kept including the data at your database. 
-But if for some reason you want to start fresh, you can run `docker-compose down` which will destroy your the containers. 
+__To restart the containers__ just issue `docker-compose up` again. 
+This docker-compose up followed by Ctrl^C is similar to turn on and off your computer, meaning that everything will be kept including the data inside the database. 
+But if for some reason you want to start fresh, you can run `docker-compose down` which will destroy the containers. 
 The next time you run `docker-compose up`, docker instantiates brand new containers from the previously compiled __images__. 
 But you'll probably just want to reseed the database [Development phase](#development-phase). 
 Either way, your code will always be kept because it lives in the host (your computer) and is shared with the container.
 
-__When you [publish your image](#publishing-your-image),__ the project source code will be copied to a brand new _php container_, slightly differently configured, and uploaded to Docker Hub. 
-Latter on, it will be pulled by an automated process to the production machine and, due to the different setup configurations, it will connect to your database at the "dbm.fe.up.pt", using the credentials previously given to each group.
+__When you [publish your image](#publishing-your-image),__ the project source code will be copied to a brand new _php container_, slightly differently configured, and uploaded to Docker Hub (check the `upload_image.sh` file). 
+Latter on, the image will be pulled by an automated process to the production machine and, due to the different setup configurations, it will connect to your production database at the "dbm.fe.up.pt", using the credentials previously given to each group.
 
 
 ## Development phase
@@ -142,9 +145,9 @@ Thankfully, docker provides a quick way of executing commands inside a container
 ```
 __Note that the container must be running__ in order that you can run exec. 
 Therefore, if you pause the containers by hitting Ctrl^C, for example, it won't work. 
-This means that you'll have to have one terminal for running the containers and another to exec commands onto the _php container_. 
+This means that you'll need one terminal for running the containers and another to exec commands onto the _php container_. 
 
-You may "enter" the container by executing:
+You may as well have a bash inside the container by executing:
 ```
     docker exec -it lbaw_php bash
 ```
@@ -161,10 +164,11 @@ On the first usage you will need to add the connection to the database using the
 
     hostname: postgres
     username: postgres
-    password: pg!fcp
+    password: pg!lol!2019
 
 Hostname is _postgres_ instead of _localhost_ since _docker composer_ creates an internal _DNS_ entry to facilitate connection between linked containers.
 
+**NOTA: Vou tirar a secção seguinte por ser demasiado específica de um IDE, certo @Tiago?**
 
 ## Setting up PHP Interpreter and Debugger
 
@@ -178,6 +182,7 @@ You can check the official instructions [here](https://blog.jetbrains.com/phpsto
 5. Choose __Docker__ and select __lbawlaravel_php:latest__ as the __Image Name__
 6. Hit OK, and it automatically should detect PHP 7.1.15 and Xdebug 2.6.0
 
+**NOTA: Passámos do Laravel 5.5 para 5.8, certo @Tiago?**
 
 ## Laravel code structure
 
@@ -185,7 +190,7 @@ In Laravel, a typical web request involves the following steps and files.
 
 ### 1) Routes
 
-The webpage is processed by *Laravel*'s [routing](https://laravel.com/docs/5.5/routing) mechanism.
+The webpage is processed by *Laravel*'s [routing](https://laravel.com/docs/5.8/routing) mechanism.
 By default, routes are defined inside *routes/web.php*. A typical *route* looks like this:
 
     Route::get('cards/{id}', 'CardController@show');
@@ -194,7 +199,7 @@ This route receives a parameter *id* that is passed on to the *show* method of a
 
 ### 2) Controllers
 
-[Controllers](https://laravel.com/docs/5.5/controllers) group related request handling logic into a single class. 
+[Controllers](https://laravel.com/docs/5.8/controllers) group related request handling logic into a single class. 
 Controllers are normally defined in the *app/Http/Controllers* folder.
 
     class CardController extends Controller
@@ -214,7 +219,7 @@ The method searches for a card in the database, checks if the user as permission
 
 ### 3) Database and Models
 
-To access the database, we will use the query builder capabilities of [Eloquent](https://laravel.com/docs/5.5/eloquent) but the initial database seeding will still be done using raw SQL (the script that creates the tables can be found in *resources/sql/seed.sql*).
+To access the database, we will use the query builder capabilities of [Eloquent](https://laravel.com/docs/5.8/eloquent) but the initial database seeding will still be done using raw SQL (the script that creates the tables can be found in *resources/sql/seed.sql*).
 
     $card = Card::find($id);
 
@@ -234,7 +239,7 @@ This class extends the *Model* class and contains information about the relation
 
 ### 4) Policies
 
-[Policies](https://laravel.com/docs/5.5/authorization#writing-policies) define which actions a user can take. 
+[Policies](https://laravel.com/docs/5.8/authorization#writing-policies) define which actions a user can take. 
 You can find policies inside the *app/Policies* folder. 
 For example, in the *CardPolicy.php* file, we defined a *show* method that only allows a certain user to view a card if that user is the card owner:
 
@@ -253,14 +258,14 @@ As you can see, there is no need to pass the current *user*.
 
 ### 5) Views
 
-A *controller* only needs to return HTML code for it to be sent to the *browser*. However we will be using [Blade](https://laravel.com/docs/5.5/blade) templates to make this task easier:
+A *controller* only needs to return HTML code for it to be sent to the *browser*. However we will be using [Blade](https://laravel.com/docs/5.8/blade) templates to make this task easier:
 
     return view('pages.card', ['card' => $card]);
 
 In this example, *pages.card* references a blade template that can be found at *resources/views/pages/card.blade.php*. 
-The second parameter is the data we are sending to the template.
+The second parameter contains the data we are injecting into the template.
 
-The first line of the template states it extends another template:
+The first line of the template states that it extends another template:
 
     @extends('layouts.app')
 
@@ -279,15 +284,16 @@ In this case, edit the file at *resources/assets/less/app.less* instead and keep
 
     ./compile-assets.sh
 
-### 7) Javascript
+### 7) JavaScript
 
-To add Javascript into your project, just edit the file found at *public/js/app.js*.
+To add JavaScript into your project, just edit the file found at *public/js/app.js*.
 
 ## Publishing your image
 
 You should keep your git's master branch always functional and frequently build and deploy your code. 
 To do so, you will create a _docker_ image for your project and publish it at [docker hub](https://hub.docker.com/). 
-LBAW's production machine will frequently pull all these images and make them available at http://<YOUR_GROUP>.lbaw-prod.fe.up.pt/. 
+LBAW's production machine will frequently pull all these images and make them available at http://lbaw18GG.lbaw-prod.fe.up.pt/. 
+
 This demo repository is available at [http://demo.lbaw-prod.fe.up.pt/](http://demo.lbaw-prod.fe.up.pt/). 
 Make sure you are inside FEUP's network or VPN.
 
@@ -296,17 +302,17 @@ Once you have a username, let your docker know who you are by executing:
 
     docker login
 
-Once your docker is able to communicate with the docker hub using your credentials configure the `upload_image.sh` script with your username and group's identification as well. 
+Once your docker is able to communicate with the docker hub using your credentials, configure the `upload_image.sh` script with your username and the image name. 
 Example configuration:
 
     DOCKER_USERNAME=johndoe # Replace by your docker hub username
-    IMAGE_NAME=lbaw17GG # Replace by your lbaw group name
+    IMAGE_NAME=lbaw18GG     # Replace by your lbaw group name
 
 Afterwards, you can build and upload the docker image by executing that script from the project root:
 
     ./upload_image.sh
 
-You can test the locally by running:
+You can test the image locally by running:
 
     docker run -it -p 8000:80 -e DB_DATABASE=<your db username> -e DB_USERNAME=<your db username> -e DB_PASSWORD=<your db password> <DOCKER_USERNAME>/<IMAGE NAME>
 
@@ -318,6 +324,6 @@ Note that during the build process we adopt the production configurations config
 The configuration will be provided as an environment variable to your container on execution time**. 
 This prevents anyone else but us from running your container with your database. 
 
-There should be only one image per group. 
+Finally, note that here should be only one image per group. 
 One team member should create the image initially and add his team to the **public** repository at docker hub. 
-You should provide your teacher the details for accessing your docker image, namely, docker username and repository (DOCKER_USERNAME/lbaw17GG).
+You should provide your teacher the details for accessing your docker image, namely, the docker username and repository (DOCKER_USERNAME/lbaw18GG), in case it was changed.
