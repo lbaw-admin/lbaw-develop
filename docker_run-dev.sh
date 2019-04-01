@@ -3,7 +3,7 @@
 #cd /app
 
 echo "Wait until PostgreSQL is up and ready."
-export PGPASSWORD='pg!fcp'
+export PGPASSWORD='pg!lol!2019'
 until pg_isready -h postgres -d postgres -U postgres; do
   echo "PostgreSQL is unavailable, sleep 10s."
   sleep 10
