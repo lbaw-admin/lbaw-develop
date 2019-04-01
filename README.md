@@ -121,7 +121,7 @@ This file is like a shell script with commnands to create the corresponding imag
 5. When the _php container_ is launched, the __docker_run-dev.sh__ script is run within the container (check the __Dockerfile-dev__ for more details). 
 If it is the first start up, it will install the project dependencies (`composer install`) and it launches the PHP server (`php artisan serve`).
 
-As this is the fisrt start, you also need to seed your database (see [Development phase](#development-phase)) to have some tuples with plausible values in the demo provided.
+You also need to seed your database to create the schema and have some tuples with plausible values when using the demo provided (see [Development phase](#development-phase)).
 
 __Everything should now be up and running.__ Checkout your web server at `http://localhost:8000`, the phpAdmin at `http://localhost:5050` and mailhog at `http://localhost:8025`. To stop the servers just hit __Ctrt^C__.
 
