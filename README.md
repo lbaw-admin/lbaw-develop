@@ -2,8 +2,8 @@
 
 ## Introduction
 
-This README describes how to setup the development environment for LBAW 2018/19
-It was prepared to run on Linux but it should be fairly easy to follow and adapt for other operating systems.
+This README describes how to setup the development environment for LBAW 2018/19.
+It was prepared to run on Linux 18.04LTS but it should be fairly easy to follow and adapt for other operating systems.
 
 * [Installing Docker and Docker Compose](#installing-docker-and-docker-compose)
 * [Setting up the Development repository](#setting-up-the-development-repository)
@@ -119,8 +119,9 @@ This file is like a shell script with commnands to create the corresponding imag
 3. Once docker-compose has the _image_ of each service, it will spin up the respective containers. 
 4. Around this phase, docker-compose sets up a network among all the containers and configures the respective internal DNS entries so that from one container you can reference the remaining by its service name (e.g if from the _php container_ you `ping postgres` you'll hit the database server host). 
 5. When the _php container_ is launched, the __docker_run-dev.sh__ script is run within the container (check the __Dockerfile-dev__ for more details). 
-It will wait for the database server to be ready and then, if it is the first start up, it will install the project dependencies (`composer install`) and seed your database (`php artisan db:seed`). 
-And finally, it launches the PHP server (`php artisan serve`).
+If it is the first start up, it will install the project dependencies (`composer install`) and it launches the PHP server (`php artisan serve`).
+
+As this is the fisrt start, you also need to seed your database (see [Development phase](#development-phase)) to have some tuples with plausible values in the demo provided.
 
 __Everything should now be up and running.__ Checkout your web server at `http://localhost:8000`, the phpAdmin at `http://localhost:5050` and mailhog at `http://localhost:8025`. To stop the servers just hit __Ctrt^C__.
 
@@ -185,7 +186,6 @@ You can check the official instructions [here](https://blog.jetbrains.com/phpsto
 5. Choose __Docker__ and select __lbawlaravel_php:latest__ as the __Image Name__
 6. Hit OK, and it automatically should detect PHP 7.1.15 and Xdebug 2.6.0
 
-**NOTA: Passámos do Laravel 5.5 para 5.8, confirmas @Tiago?**
 
 ## Laravel code structure
 
