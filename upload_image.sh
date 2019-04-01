@@ -3,8 +3,8 @@
 # Stop execution if a step fails
 set -e
 
-DOCKER_USERNAME=danfergo # Replace by your docker hub username
-IMAGE_NAME=lbaw-danfergo
+DOCKER_USERNAME=YOUR_DOCKER_ACCOUNT   # Replace by your docker hub username
+IMAGE_NAME=lbaw18GG                   # Replace GG by your group's number
 
 # Modified to work from docker container
 docker exec lbaw_php composer install # Ensure that dependencies are available
