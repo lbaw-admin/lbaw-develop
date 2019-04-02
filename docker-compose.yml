@@ -24,8 +24,6 @@ services:
       driver: "none"
     ports:
       - "5432:5432"
-    expose:
-      - "5432"
 
   pgadmin:
     container_name: lbaw_pgadmin
