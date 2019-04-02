@@ -50,10 +50,10 @@ Then, copy the contents of the demo repository to your own.
     # NOW from github
     git clone git@github.com:lbaw-admin/lbaw-develop.git
     # LATER from git, not github!
-    #git clone -b alternative https://git.fe.up.pt/lbaw/template-lbaw.git
+    #git clone https://git.fe.up.pt/lbaw/template-lbaw.git
 
     # remove the Git folder from the demo folder
-    rm -rf template/.git
+    rm -rf lbaw-develop/.git
 
     # goto your repository
     cd lbaw18GG
@@ -62,7 +62,7 @@ Then, copy the contents of the demo repository to your own.
     git checkout master 
 
     # copy all the demo files
-    cp -r ../template/. .
+    cp -r ../lbaw-develop/. .
 
     # add the new files to your repository
     git add .
@@ -70,7 +70,7 @@ Then, copy the contents of the demo repository to your own.
     git push origin master 
 
 At this point you should have the project skeleton in your local machine and be ready to start working on it.
-You may remove the __template__ demo directory, as it is noy needed anymore.
+You may remove the __lbaw-develop__ demo directory, as it is noy needed anymore.
 
 
 ## Starting Docker containers
