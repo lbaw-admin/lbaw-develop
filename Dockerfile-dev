@@ -26,9 +26,6 @@ RUN docker-php-ext-install gd
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer config --global process-timeout 2000 # Prevents timeout issues
 
-# We'll need to know when PostgreSQL is ready (pg_isready) to start php server.
-#RUN apt-get install -y postgresql-client-10
-
 # Install Xdebug
 RUN pecl install xdebug
 RUN docker-php-ext-enable xdebug

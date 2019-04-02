@@ -6,8 +6,8 @@ set -e
 DOCKER_USERNAME=jlopes60   # Replace by your docker hub username
 IMAGE_NAME=demo            # Replace with your group's image name
 
-# Modified to work from docker container
-docker exec lbaw_php composer install # Ensure that dependencies are available
+# the Docker container lbaw_php must be running
+docker exec lbaw_php composer install 
 docker exec lbaw_php php artisan clear-compiled
 docker exec lbaw_php php artisan optimize
 
