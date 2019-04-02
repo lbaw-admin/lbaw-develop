@@ -41,8 +41,9 @@ services:
 
 # optional, in case you need to send email messages
   mailhog:
-      image: mailhog/mailhog
-      logging:
-        driver: "none"
-      ports:
-        - 8025:8025
+    container_name: lbaw_mailhog
+    image: mailhog/mailhog
+    logging:
+      driver: "none"
+    ports:
+      - 8025:8025
