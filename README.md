@@ -132,19 +132,19 @@ __To restart the containers__ just issue `docker-compose up` again.
 This docker-compose up followed by Ctrl-C is similar to turn on and off your computer, meaning that everything will be kept including the data inside the database. 
 But if for some reason you want to start fresh, you can run `docker-compose down` which will destroy the containers. 
 The next time you run `docker-compose up`, docker instantiates brand new containers from the previously compiled __images__. 
-But you'll probably just want to reseed the database [Development phase](#development-phase). 
+But you'll probably just want to reseed the database (once again, see [Development phase](#development-phase)). 
 Either way, your code will always be kept because it lives in the host (your computer) and is shared with the container.
 
 To verify all containers running use `docker ps -a`.
 To stop all containers and remove use `docker stop $(docker ps -a -q)` and `docker rm $(docker ps -a -q)`.
 
 __When you [publish your image](#publishing-your-image),__ the project source code will be copied to a brand new _php container_, slightly differently configured, and uploaded to Docker Hub (check the __upload_image.sh__ file). 
-Latter on, the image will be pulled by an automated process to the production machine and, due to the different setup configurations, it will connect to your production database at the "dbm.fe.up.pt", using the credentials previously given to each group.
+Later on, the image will be pulled by an automated process to the production machine and, due to the different setup configurations, it will connect to your production database at the "dbm.fe.up.pt", using the credentials previously given to each group.
 
 
 ## Development phase
 
-During the development you might need to reseed your database, or reinstall PHP dependencies i.e., interact with PHP that is running inside the container. 
+During development you might need to reseed your database, or reinstall PHP dependencies i.e., interact with PHP that is running inside the container. 
 Thankfully, docker provides a quick way of executing commands inside a container from the host:
 ```
     docker exec lbaw_php php artisan db:seed
@@ -158,7 +158,7 @@ You may as well have a bash inside the container by executing:
 ```
     docker exec -it lbaw_php bash
 ```
-Notice that the terminal prompt changes to something like `root@acf3dbd56f07:/app# `. 
+Where then you can simply run the command (e.g., `php artisan db:seed`). Notice that the terminal prompt changes to something like `root@acf3dbd56f07:/app# `. 
 
 
 ## Working with pgAdmin
