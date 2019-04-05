@@ -54,6 +54,8 @@ Then, copy the contents of the demo repository to your own.
 
     # remove the Git folder from the demo folder
     rm -rf lbaw-develop/.git
+    # preserve existing README.md
+    mv template-lbaw/README.md template-lbaw/README_lbaw.md
 
     # goto your repository
     cd lbaw18GG
