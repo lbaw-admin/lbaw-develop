@@ -42,9 +42,9 @@ The official instructions are in [Install Docker](https://docs.docker.com/instal
 You should have your own repository and a copy of the demo repository in the same folder in your machine.
 Then, copy the contents of the demo repository to your own.
 
-    # Clone the group repository (lbaw18GG), if not yet available locally
-    # Notice that you need to substitute GG by your group's number
-    git clone https://git.fe.up.pt/lbaw/lbaw18/lbaw18GG.git
+    # Clone the group repository (lbaw21gg), if not yet available locally
+    # Notice that you need to substitute gg by your group's number
+    git clone https://git.fe.up.pt/lbaw/lbaw21/lbaw21gg.git
 
     # clone the LBAW's project skeleton
     # NOW from github
@@ -58,7 +58,7 @@ Then, copy the contents of the demo repository to your own.
     mv template-lbaw/README.md template-lbaw/README_lbaw.md
 
     # goto your repository
-    cd lbaw18GG
+    cd lbaw21gg
 
     # make sure you are using the master branch
     git checkout master 
