@@ -37,6 +37,13 @@ The official instructions are in [Install Docker](https://docs.docker.com/instal
     docker-compose --version # verify that you have Docker Compose installed.
 
 
+**Note**: After install docker maybe you prefer using `docker` without `sudo`
+1. Create _docker_ group if it does not exist: `sudo groupadd docker`
+1. Add user to _docker_ group: `sudo usermod -aG docker ${USER}`
+1. Change _docker.sock_ to new permission: `sudo chmod 666 /var/run/docker.sock`
+1. Finally restart docker daemon service: `sudo service docker restart`
+
+
 ## Setting up the Development repository
 
 You should have your own repository and a copy of the demo repository in the same folder in your machine.
